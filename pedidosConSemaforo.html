@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos con Semáforo</title>
+    <style>
+        body {
+            background-color: black;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: blanchedalmond;
+        }
+        h1 {
+            color: blanchedalmond;
+        }
+        button {
+            background-color: blue;
+            color: white;
+            font-size: medium;
+            text-align: center;
+            margin-top: 2em;
+            border-radius: 5em;
+            padding: 1.2rem;
+            border: 2px solid transparent;
+        }
+        .stock {
+            font-size: large;
+            margin: 10px 0;
+        }
+        .alert {
+            color: red;
+        }
+        .low-stock {
+            color: yellow;
+        }
+        .success {
+            color: green;
+        }
+        .log {
+            color: white;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid gray;
+            padding: 10px;
+        }
+        .semaforo {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GESTIÓN DE PEDIDOS CON SEMÁFORO</h1>
+    
+    
+    <div id="stock-info">
+        <div id="electrodomesticoA" class="stock">
+            Electrodoméstico A: <span class="success">5</span>
+            <div id="semaforoA" class="semaforo"></div>
+        </div>
+        <div id="electrodomesticoB" class="stock">
+            Electrodoméstico B: <span class="success">3</span>
+            <div id="semaforoB" class="semaforo"></div>
+        </div>
+        
+        <button id="process-orders">PROCESAR PEDIDOS</button>
+    </div>
+
+    <div class="log" id="log"></div>
+
+    <script src="./conSemaforo.js"></script>
+    <script>
+        const stockA = document.querySelector('#electrodomesticoA span');
+        const stockB = document.querySelector('#electrodomesticoB span');
+        const logDiv = document.getElementById('log');
+        const button = document.getElementById('process-orders');
+        const semaforoA = document.getElementById('semaforoA');
+        const semaforoB = document.getElementById('semaforoB');
+
+        button.addEventListener('click', () => {
+            realizarPedidos();
+        });
+
+        function actualizarStockUI() {
+            stockA.textContent = pedidos.electrodomesticoA;
+            stockB.textContent = pedidos.electrodomesticoB;
+
+            actualizarSemaforo(pedidos.electrodomesticoA, semaforoA);
+            actualizarSemaforo(pedidos.electrodomesticoB, semaforoB);
+
+            if (pedidos.electrodomesticoA <= 0) {
+                stockA.className = 'alert';
+            } else if (pedidos.electrodomesticoA <= 2) {
+                stockA.className = 'low-stock'
+            } 
+            else {
+                stockA.className = 'success';
+            }
+
+            if (pedidos.electrodomesticoB <= 0) {
+                stockB.className = 'alert';
+            } else if (pedidos.electrodomesticoB <= 2) {
+                stockB.className = 'low-stock'
+            } 
+            else {
+                stockB.className = 'success';
+            }
+        }
+
+        function actualizarSemaforo(stock, semaforo) {
+            if (stock <= 0) {
+                semaforo.style.backgroundColor = 'red';
+            } else if (stock <= 2) {
+                semaforo.style.backgroundColor = 'yellow';
+            } else {
+                semaforo.style.backgroundColor = 'green'; 
+            }
+        }
+
+        function agregarLog(mensaje) {
+            const logEntry = document.createElement('div');
+            logEntry.textContent = mensaje;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight; // Hacer scroll hacia abajo
+        }
+    </script>
+</body>
+</html>
